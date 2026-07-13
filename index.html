@@ -284,6 +284,32 @@
                   width var(--transition-duration) var(--transition-base);
     }
 
+    .nav-logo {
+      display: none;
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-style: italic;
+      font-weight: 700;
+      color: var(--text-color);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-color);
+      padding: 8px;
+      z-index: 1001;
+    }
+
+    .menu-toggle svg line {
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform-origin: center;
+    }
+
     /* ==========================================
        SECTION 1: HERO
        ========================================== */
@@ -330,7 +356,7 @@
     .hero-title-main {
       font-family: var(--font-sans);
       font-weight: 800;
-      font-size: clamp(52px, 8.5vw, 130px);
+      font-size: clamp(38px, 8.5vw, 130px);
       line-height: 0.9;
       letter-spacing: -0.05em;
       color: var(--text-color);
@@ -341,7 +367,7 @@
       font-family: var(--font-serif);
       font-style: italic;
       font-weight: 600;
-      font-size: clamp(44px, 7vw, 110px);
+      font-size: clamp(32px, 7vw, 110px);
       line-height: 0.9;
       color: var(--accent-deep);
       letter-spacing: -0.02em;
@@ -1095,15 +1121,6 @@
     }
 
     @media (max-width: 900px) {
-      /* Navigation adjustments */
-      .nav-bar {
-        width: 90%;
-      }
-      .nav-link {
-        padding: 8px 16px;
-        font-size: 13px;
-      }
-
       /* Structural collapses */
       .grid-2 {
         grid-template-columns: 1fr;
@@ -1126,7 +1143,22 @@
         text-align: center;
       }
 
-      .hero-left-side, .hero-right-side {
+      /* Reorder grid columns on mobile: Photo first, then Description/CTAs, then badges */
+      .hero-center-side {
+        order: 1;
+      }
+      
+      .hero-right-side {
+        order: 2;
+        align-items: center;
+        text-align: center;
+        gap: 24px;
+        height: auto;
+        justify-content: flex-start;
+      }
+      
+      .hero-left-side {
+        order: 3;
         align-items: center;
         text-align: center;
         gap: 24px;
@@ -1141,6 +1173,7 @@
 
       .hero-ctas {
         justify-content: center;
+        gap: 12px;
       }
 
       .hero-avatars-row {
@@ -1162,7 +1195,7 @@
         left: 50%;
       }
 
-      .hero-photo-container {
+      .hero-photo-wrapper {
         max-width: 320px;
       }
 
@@ -1215,22 +1248,111 @@
       }
     }
 
+    /* Screen <= 768px (Tablet & Mobile Nav transition) */
+    @media (max-width: 768px) {
+      h2 {
+        font-size: 32px;
+      }
+
+      .nav-bar {
+        position: fixed;
+        width: 100%;
+        max-width: 100%;
+        top: 0;
+        left: 0;
+        transform: none;
+        background: rgba(255, 255, 255, 0.95);
+        border-bottom: 1px solid var(--border-color);
+        padding: 14px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 20px rgba(20, 20, 15, 0.04);
+      }
+
+      .nav-logo {
+        display: block;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-container {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        background: var(--card-bg);
+        border: none;
+        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+        border-radius: 0;
+        padding: 16px 24px;
+        gap: 8px;
+        box-shadow: 0 10px 30px rgba(20, 20, 15, 0.08);
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+      }
+
+      .nav-bar.open .nav-container {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      .nav-link {
+        width: 100%;
+        padding: 12px 20px;
+        border-radius: 8px;
+        color: var(--text-muted);
+      }
+
+      .nav-link.active {
+        background: var(--text-color);
+        color: var(--bg-color) !important;
+      }
+
+      .nav-resume-link {
+        width: 100%;
+        padding: 12px 20px;
+        border-radius: 8px;
+        justify-content: flex-start;
+      }
+
+      .nav-indicator {
+        display: none;
+      }
+    }
+
     @media (max-width: 480px) {
+      h2 {
+        font-size: 28px;
+      }
+      .container {
+        padding: 0 16px;
+      }
+      .project-card {
+        padding: 24px;
+      }
+      .hero-avatars-row {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
       .cert-grid {
         grid-template-columns: 1fr;
       }
       .hero-ctas {
         flex-direction: column;
+        gap: 12px;
       }
       .hero-ctas .btn {
         width: 100%;
       }
-      .floating-chip {
-        padding: 6px 12px;
-      }
-      .chip-1 { left: -10px; }
-      .chip-2 { right: -10px; }
-      .chip-3 { right: -5px; }
     }
   </style>
 </head>
@@ -1240,6 +1362,14 @@
        GLOBAL FLOATING NAVIGATION
        ========================================== -->
   <nav class="nav-bar">
+    <a href="#home" class="nav-logo">HM</a>
+    <button class="menu-toggle" aria-label="Toggle Navigation">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12" class="line-mid"></line>
+        <line x1="3" y1="6" x2="21" y2="6" class="line-top"></line>
+        <line x1="3" y1="18" x2="21" y2="18" class="line-bottom"></line>
+      </svg>
+    </button>
     <div class="nav-container">
       <div class="nav-indicator"></div>
       <a href="#home" class="nav-link active">Home</a>
@@ -1667,17 +1797,21 @@
 
       function moveIndicator(link) {
         if (!link) return;
-        const containerRect = navContainer.getBoundingClientRect();
-        const linkRect = link.getBoundingClientRect();
-        
-        // Compute left and width relative to the parent nav-container
-        const leftOffset = linkRect.left - containerRect.left;
-        indicator.style.left = `${leftOffset}px`;
-        indicator.style.width = `${linkRect.width}px`;
 
         // Update active class
         navLinks.forEach(l => l.classList.remove("active"));
         link.classList.add("active");
+
+        // Only compute and update positions if the indicator is visible (desktop)
+        if (indicator && window.getComputedStyle(indicator).display !== "none") {
+          const containerRect = navContainer.getBoundingClientRect();
+          const linkRect = link.getBoundingClientRect();
+          
+          // Compute left and width relative to the parent nav-container
+          const leftOffset = linkRect.left - containerRect.left;
+          indicator.style.left = `${leftOffset}px`;
+          indicator.style.width = `${linkRect.width}px`;
+        }
       }
 
       // Initialize on load
@@ -1696,6 +1830,39 @@
         const activeLink = document.querySelector(".nav-link.active");
         moveIndicator(activeLink);
       });
+
+      // 1B. MOBILE MENU TOGGLE LOGIC
+      const navBar = document.querySelector(".nav-bar");
+      const menuToggle = document.querySelector(".menu-toggle");
+
+      if (menuToggle && navBar) {
+        menuToggle.addEventListener("click", (e) => {
+          e.stopPropagation();
+          navBar.classList.toggle("open");
+        });
+
+        // Close menu on nav links click
+        const allNavLinks = navBar.querySelectorAll(".nav-link, .nav-resume-link");
+        allNavLinks.forEach(link => {
+          link.addEventListener("click", () => {
+            navBar.classList.remove("open");
+          });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener("click", (e) => {
+          if (!navBar.contains(e.target)) {
+            navBar.classList.remove("open");
+          }
+        });
+
+        // Close menu on window resize if larger than tablet
+        window.addEventListener("resize", () => {
+          if (window.innerWidth > 768) {
+            navBar.classList.remove("open");
+          }
+        });
+      }
 
       // ------------------------------------------
       // 2. SCROLL ENTRIES & SCROLLSPY LOGIC
